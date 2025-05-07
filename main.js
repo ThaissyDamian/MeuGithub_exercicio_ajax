@@ -9,27 +9,25 @@ document.addEventListener("DOMContentLoaded", function () {
     
     fetch("https://api.github.com/users/thaissyDamian")
     .then(function(res){
+        if (!res.ok) {
+            throw new Error("Usuário não encontrado");
+        }
         return res.json();
     })
-
     .then(function(json) {
         console.log(json);
 
-        if (json.status == 404) {
-            throw new Error("user not found");
-        }
-
-        nameElement.innerHTML = json.name;
-        usernameElement.innerHTML = json.login;
-        avatarElement.src = json.avatar_url;
-        reposElement.innerHTML = json.public_repos;
+        nameElement.innerText = json.name || "Nome não disponível";
+        usernameElement.innerText = "@" + (json.login || "Usuário não encontrado");
+        avatarElement.src = json.avatar_url || "https://via.placeholder.com/150";
+        reposElement.innerText = json.public_repos;
         followersElement.innerText = json.followers;
         followingElement.innerText = json.following;
         linkElement.href = json.html_url;
     })
-
-    .catch(function(erro) {
-        alert("User not found");
+    .catch(function(error) {
+        console.error(error);
+        nameElement.innerText = "Erro ao carregar os dados";
     });
 
-})
+});
